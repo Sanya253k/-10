@@ -39,3 +39,66 @@ poly_status_t poly_evaluate(
 	}
 	return status;
 }
+
+poly_status_t poly_add(
+		const polynomial_t *a,
+		const polynomial_t *b,
+		polynomial_t *result){
+	poly_status_t status = POLY_OK;
+	size_t max_degree = 0;
+	if (a == NULL || b == NULL || result == NULL) status = POLY_ERROR_NULL;
+	else if (a -> coeffs == NULL || b -> coeffs == NULL) status = POLY_ERROR_NULL;
+	else{
+		max_degree = (a -> degree > b -> degree)
+			? a -> degree
+			: b -> degree;
+
+		status = poly_create(result, max_degree);
+		
+		if (status == POLY_OK){
+			for (size_t iter = 0; iter <= max_degree; iter++){
+				double av = 0.;
+				double bv = 0.;
+				
+				if (iter <= a -> degree) av = a -> coeffs[iter];
+				if (iter <= b -> degree) bv = b -> coeffs[iter];
+
+				result -> coeffs[iter] = av + bv;
+			}
+		}
+	}
+	
+	return status;
+}
+
+poly_status_t poly_sub(
+		const polynomial_t *a,
+		const polynomial_t *b,
+		polynomial_t *result){
+	poly_status_t status = POLY_OK;
+	size_t max_degree = 0;
+
+	if (a == NULL || b == NULL || result == NULL) status = POLY_ERROR_NULL;
+	else if (a -> coeffs == NULL || b -> coeffs == NULL) status = POLY_ERROR_NULL;
+	else {
+		max_degree = (a -> degree > b -> degree)
+			? a -> degree
+			: b -> degree;
+
+		status = poly_create(result, max_degree);
+
+		if (status == POLY_OK){
+			for (size_t iter = 0; iter <= max_degree; iter++){
+				double av = 0.;
+				double bv = 0.;
+
+				if (iter <= a -> degree) av = a -> coeffs[iter];
+				if (iter <= b -> degree) bv = b -> coeffs[iter];
+
+				result -> coeffs[iter] = av - bv;
+
+			}
+		}
+	}
+	return status;
+}
