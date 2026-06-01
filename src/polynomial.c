@@ -102,3 +102,40 @@ poly_status_t poly_sub(
 	}
 	return status;
 }
+
+poly_status_t poly_scale(
+		polynomial_t *poly,
+		double scalar
+		){
+	poly_status_t status = POLY_OK;
+
+	if (poly == NULL) status = POLY_ERROR_NULL;
+	else if (poly -> coeffs == NULL) status = POLY_ERROR_NULL;
+	else for (size_t iter = 0; iter <= poly -> degree; iter++) poly -> coeffs[iter] *= scalar;
+
+	return status;
+}
+
+poly_status_t poly_derivative(
+		const polynomial_t *poly,
+		polynomial_t *result){
+	poly_status_t status = POLY_OK;
+
+	if (poly == NULL || result == NULL) status = POLY_ERROR_NULL;
+	else if (poly -> coeffs == NULL) status = POLY_ERROR_NULL;
+	else if (poly -> degree == 0){
+	       	status = poly_create(result, 0);
+		if (status == POLY_OK) result -> coeffs[0] = 0.;
+	}
+	else{
+		status = poly_create(result, poly -> degree - 1);
+		
+		if (status == POLY_OK){
+			for (size_t iter = 1; iter <= poly -> degree; iter++){
+				result -> coeffs[iter - 1] =
+					poly -> coeffs[iter] * (double)iter;
+			}
+		}
+	}
+	return status;
+}
