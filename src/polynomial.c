@@ -22,3 +22,20 @@ void poly_free(polynomial_t *poly){
 		poly -> degree = 0;
 	}
 }
+
+poly_status_t poly_evaluate(
+		const polynomial_t *poly,
+		double x,
+		double *result){
+	poly_status_t status = POLY_OK;
+	double sum = 0.;
+	if (poly == NULL || result == NULL) status = POLY_ERROR_NULL;
+	else if (poly -> coeffs == NULL)   status = POLY_ERROR_NULL;
+	else{
+		for (size_t iter = 0; iter <= poly -> degree; iter++){
+			sum += poly -> coeffs[iter] * pow(x, (double)iter);
+		}
+		*result = sum;
+	}
+	return status;
+}
