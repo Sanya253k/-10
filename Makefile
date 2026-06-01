@@ -1,5 +1,5 @@
 # =============================================================================
-# Makefile - библиотека SparseVector
+# Makefile - библиотека Polynomial
 # =============================================================================
 # Цели:
 #   all        - собрать .so & приложение
@@ -33,9 +33,9 @@ LIB_SRCS    := $(wildcard $(SRC_DIR)/*.c)
 LIB_OBJS    := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(LIB_SRCS))
 
 # Артефакты
-LIB_SO      := $(BUILD_DIR)/libsparse_vector.so
+LIB_SO      := $(BUILD_DIR)/libpolynomial.so
 APP_BIN     := $(BUILD_DIR)/demo
-TEST_BIN    := $(BUILD_DIR)/test_sparse_vector
+TEST_BIN    := $(BUILD_DIR)/test_polynomial
 
 # =============================================================================
 # Цель по умолчанию
@@ -72,7 +72,7 @@ $(LIB_SO): $(LIB_OBJS)
 app: $(APP_BIN)
 
 $(APP_BIN): $(APP_DIR)/main.c $(LIB_SO)
-	$(CC) $(CFLAGS) -I$(INC_DIR) $< -o $@ -L$(BUILD_DIR) -lsparse_vector -Wl,-rpath,$(abspath $(BUILD_DIR))
+	$(CC) $(CFLAGS) -I$(INC_DIR) $< -o $@ -L$(BUILD_DIR) -lpolynomial -Wl,-rpath,$(abspath $(BUILD_DIR))
 
 .PHONY: run
 run: $(APP_BIN)
@@ -82,8 +82,8 @@ run: $(APP_BIN)
 # C-тесты
 # =============================================================================
 
-$(TEST_BIN): $(TEST_DIR)/test_sparse_vector.c $(LIB_SO)
-	$(CC) $(CFLAGS) -I$(INC_DIR) $< -o $@ -L$(BUILD_DIR) -lsparse_vector -lm -Wl,-rpath,$(abspath $(BUILD_DIR))
+$(TEST_BIN): $(TEST_DIR)/test_polynomial.c $(LIB_SO)
+	$(CC) $(CFLAGS) -I$(INC_DIR) $< -o $@ -L$(BUILD_DIR) -lpolynomial -lm -Wl,-rpath,$(abspath $(BUILD_DIR))
 
 .PHONY: test-c
 test-c: $(TEST_BIN)
@@ -97,7 +97,7 @@ test-c: $(TEST_BIN)
 .PHONY: test-py
 test-py: $(LIB_SO)
 	@echo "--- Запуск Python-тестов ---"
-	python3 $(TEST_DIR)/test_sparse_vector.py
+	python3 $(TEST_DIR)/test_polynomial.py
 
 # =============================================================================
 # Все тесты
